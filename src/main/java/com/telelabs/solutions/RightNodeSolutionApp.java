@@ -238,7 +238,7 @@ public class RightNodeSolutionApp {
         rightNodeSoln.setRightNodes(rootNode);
         
         logger.debug("---------- Right Nodes:");
-        rightNodeSoln.printNodes(rootNode);
+        rightNodeSoln.printNodes(rootNode, true);
     }
 
 }

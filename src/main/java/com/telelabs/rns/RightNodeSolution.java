@@ -1,8 +1,9 @@
 package com.telelabs.rns;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -22,20 +23,15 @@ public class RightNodeSolution {
 	public void setRightNodes(Node rootNode) {
 		Objects.requireNonNull(rootNode);
 
-		List<Node> children = new ArrayList<>();
-		children.add(rootNode);
+		List<Node> children = Arrays.asList(rootNode);
 
 		// set right for all children at each level
 		while (children.size() > 0) {
-			List<Node> allChildren = new ArrayList<>();
-
-			for (Node child : children) {
-				if (child.hasChildren()) {
-					setRightForChildren(child);
-					allChildren.addAll(child.getChildren());
-				}
-			}
-			children = allChildren;
+			//set right node for each child of the parent node
+			children.stream().filter(Node::hasChildren).forEach(parent -> setRightForChildren(parent));
+			
+			//get all children
+			children = children.stream().filter(Node::hasChildren).flatMap(parent -> parent.getChildren().stream()).collect(Collectors.toList());
 		}
 	}
 	
@@ -58,24 +54,19 @@ public class RightNodeSolution {
 		Objects.requireNonNull(rootNode);
 
 		// start with root
-		List<Node> children = new ArrayList<>();
-		children.add(rootNode);
+		List<Node> children = Arrays.asList(rootNode);
 
 		// print all children
 		while (children.size() > 0) {
-			List<Node> nodes = new ArrayList<>();
 			for (Node child : children) {
 				// print the node
 				logger.debug(child);
 				if(printToConsole) {
 					System.out.println(child);
 				}
-
-				if (child.hasChildren()) {
-					nodes.addAll(child.getChildren());
-				}
 			}
-			children = nodes;
+			
+			children = children.stream().filter(Node::hasChildren).flatMap(child -> child.getChildren().stream()).collect(Collectors.toList());
 		}
 	}
 
